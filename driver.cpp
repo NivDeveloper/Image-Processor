@@ -5,17 +5,16 @@
 int main(char argc, char* argv[]){
     //construct single instance of PGMimageProcessor
 
-    /*
-    checking that there are arguements    
-    */
+    
+    //checking that there are arguements    
     if(argc == 1){
         std::cout << "ARGUEMENTS MISSING: [options] <inputPGMfile>" << std::endl;
         return 1;
     }
 
-    int min{3};
-    int max;                //for -s tag
-    int threshold{128};         //for -t tag
+    int min{3};                 //for -s
+    int max;                    //for -s
+    int threshold{128};         //for -t
     bool printData{false};      //for -p
     std::string outfile;        //for -w
 

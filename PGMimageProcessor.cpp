@@ -6,15 +6,29 @@
 //std::list or std::vector to store component images
 
 //default constructor
-PKNNIV001::PGMimageProcessor::PGMimageProcessor(){}
+PKNNIV001::PGMimageProcessor::PGMimageProcessor(std::vector<ConnectedComponent> comp):
+    components{comp}{}
+
 //copy constructor
-PKNNIV001::PGMimageProcessor::PGMimageProcessor(const PGMimageProcessor &rhs){}
+PKNNIV001::PGMimageProcessor::PGMimageProcessor(const PGMimageProcessor &rhs):
+    PGMimageProcessor{rhs.components}{}
+
 //move constructor
-PKNNIV001::PGMimageProcessor::PGMimageProcessor(PGMimageProcessor &&rhs){}
+PKNNIV001::PGMimageProcessor::PGMimageProcessor(PGMimageProcessor &&rhs):
+    components{rhs.components}{}
+
 //copy assignment
-PKNNIV001::PGMimageProcessor PKNNIV001::PGMimageProcessor::operator=(const PGMimageProcessor &rhs){}
+PKNNIV001::PGMimageProcessor &PKNNIV001::PGMimageProcessor::operator=(const PGMimageProcessor &rhs){
+    components = rhs.components;
+    return *this;
+}
+
 //move assignment
-PKNNIV001::PGMimageProcessor PKNNIV001::PGMimageProcessor::operator=(PGMimageProcessor &&rhs){}
+PKNNIV001::PGMimageProcessor &PKNNIV001::PGMimageProcessor::operator=(PGMimageProcessor &&rhs){
+    components = rhs.components;
+    return *this;
+}
+
 //destructor
 PKNNIV001::PGMimageProcessor::~PGMimageProcessor(){}
 

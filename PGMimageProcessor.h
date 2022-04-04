@@ -1,5 +1,6 @@
 #include "ConnectedComponent.h"
 #include <string>
+#include <vector>
 #ifndef _PGMIMAGEPROCESSOR_H_
 #define _PGMIMAGEPROCESSOR_H_
 
@@ -8,19 +9,20 @@ namespace PKNNIV001{
     class PGMimageProcessor{
 
         private:
+            std::vector<ConnectedComponent> components;
 
         public:
             //BIG 6----------------
             //Default constructor
-            PGMimageProcessor();
+            PGMimageProcessor(std::vector<ConnectedComponent> comp);
             //copy constructor
             PGMimageProcessor(const PGMimageProcessor &rhs);
             //move constructor
             PGMimageProcessor(PGMimageProcessor &&rhs);
             //copy assignment
-            PGMimageProcessor operator=(const PGMimageProcessor &rhs);
+            PGMimageProcessor &operator=(const PGMimageProcessor &rhs);
             //move assignment
-            PGMimageProcessor operator=(PGMimageProcessor &&rhs);
+            PGMimageProcessor &operator=(PGMimageProcessor &&rhs);
             //destructor
             ~PGMimageProcessor();
             //---------------------

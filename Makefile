@@ -1,4 +1,4 @@
-MAINPROG=extractor
+MAINPROG=driver
 
 SOURCES:=$(wildcard *.cpp)
 OBJECTS=$(SOURCES:.cpp=.o)
