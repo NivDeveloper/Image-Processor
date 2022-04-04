@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include "PGMimageProcessor.h"
 //public methods to manipulate/ouptut connected components
 int main(char argc, char* argv[]){
     //construct single instance of PGMimageProcessor
