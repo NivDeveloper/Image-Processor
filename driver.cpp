@@ -2,7 +2,7 @@
 #include <string>
 #include "PGMimageProcessor.h"
 //public methods to manipulate/ouptut connected components
-int main(char argc, char* argv[]){
+int main(int argc, char* argv[]){
     //construct single instance of PGMimageProcessor
 
     
@@ -34,9 +34,12 @@ int main(char argc, char* argv[]){
         else if(s=="-w"){
             outfile = argv[i+1];
         }
-    }//-------------------------------------------
+    }
+    std::string name{argv[sizeof(argv)-1]};
+    //-------------------------------------------
 
-
+    //create instance of PGMimageProcessor
+    PKNNIV001::PGMimageProcessor processor{name};
 
 
 

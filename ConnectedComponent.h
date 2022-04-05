@@ -14,6 +14,8 @@
         public:
             //BIG 6----------------
             ConnectedComponent(int no, int ID, std::vector<std::pair<int,int>> pix);
+            //constructor with just ID
+            ConnectedComponent(int ID);
             //copy constructor
             ConnectedComponent(const ConnectedComponent &rhs);
             //move constructor
@@ -27,6 +29,17 @@
             //---------------------
 
             //methods to expose data to other classes
+            //increment no.pixels
+            void incPixels(){nopix++;}
+            
+            //add pixel
+            void addPixel(int y, int x){pixels.push_back(std::make_pair(y,x));}
+
+            //get nopix
+            int getNoPixels(void) const {return int{nopix};}
+
+            //get pixels
+            //std::vector<std::pair<int,int>> getPixels(void)
 
 
 
