@@ -14,7 +14,7 @@ int main(int argc, char* argv[]){
 
     int min{3};                 //for -s
     int max;                    //for -s
-    int threshold{128};         //for -t
+    unsigned char threshold{128};         //for -t
     bool printData{false};      //for -p
     std::string outfile;        //for -w
 
@@ -26,7 +26,7 @@ int main(int argc, char* argv[]){
             max = std::atoi(argv[i+2]);
         }
         else if(s=="-t"){
-            threshold = std::atoi(argv[i+1]);
+            threshold = static_cast<unsigned char>(*argv[i+1]);
         }
         else if(s=="-p"){
             printData = true;
@@ -40,6 +40,9 @@ int main(int argc, char* argv[]){
 
     //create instance of PGMimageProcessor
     PKNNIV001::PGMimageProcessor processor{name};
+    processor.extractComponents(threshold,min);
+    processor.filterComponentsBySize(min,max);
+    processor.writeComponents(outfile);
 
 
 
