@@ -22,6 +22,7 @@ namespace PKNNIV001{
 
         public:
             //BIG 6----------------
+            PGMimageProcessor(std::string n, std::vector<ConnectedComponent> comp, int h, int w);
             //Default constructor
             PGMimageProcessor(std::string n);
             //copy constructor

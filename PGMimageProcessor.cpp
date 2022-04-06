@@ -5,6 +5,9 @@
 #include <iostream>
 #include <queue>
 
+PKNNIV001::PGMimageProcessor::PGMimageProcessor(std::string n, std::vector<ConnectedComponent> comp, int h, int w):
+    name{n}, components{comp}, height{h}, width{w}{}
+
 //default constructor
 PKNNIV001::PGMimageProcessor::PGMimageProcessor(std::string n):
     name{n}{
@@ -49,21 +52,27 @@ PKNNIV001::PGMimageProcessor::PGMimageProcessor(std::string n):
 
 //copy constructor
 PKNNIV001::PGMimageProcessor::PGMimageProcessor(const PGMimageProcessor &rhs):
-    PGMimageProcessor{rhs.name}{}//create copy of unique pointer array
+    PGMimageProcessor{rhs.name, rhs.components,rhs.height,rhs.width}{}//create copy of unique pointer array
 
 //move constructor
 PKNNIV001::PGMimageProcessor::PGMimageProcessor(PGMimageProcessor &&rhs):
-    name{rhs.name}{}//transfer ownership of unique pointer
+    name{rhs.name}, components{rhs.components}, height{rhs.height}, width{rhs.width}{}//transfer ownership of unique pointer
 
 //copy assignment
 PKNNIV001::PGMimageProcessor &PKNNIV001::PGMimageProcessor::operator=(const PGMimageProcessor &rhs){
     name = rhs.name;//create new instance of image array
+    components = rhs.components;
+    width = rhs.width;
+    height = rhs.height;
     return *this;
 }
 
 //move assignment
 PKNNIV001::PGMimageProcessor &PKNNIV001::PGMimageProcessor::operator=(PGMimageProcessor &&rhs){
     name = rhs.name;//transfer ownership of unique pointer
+    components = rhs.components;
+    width = rhs.width;
+    height = rhs.height;
     return *this;
 }
 
@@ -81,8 +90,6 @@ must be returned.*/
 int PKNNIV001::PGMimageProcessor::extractComponents(unsigned char threshold, int minValidSize){
     //image now in memory, now have to extract components
     
-    
-
     int ID{0};  //iteratng count of number of components also the current index of component in component vector
 
     //loop over each pixel in input image
