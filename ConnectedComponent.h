@@ -38,8 +38,11 @@
             //get nopix
             int getNoPixels(void) const {return int{nopix};}
 
-            //get pixels
-            //std::vector<std::pair<int,int>> getPixels(void)
+            //getID
+            int getID(void) const { return int{id};}
+
+            //get pixels - returns vector of all the points in a component
+            std::vector<std::pair<int,int>> getPixels(void){return pixels;}
 
 
 

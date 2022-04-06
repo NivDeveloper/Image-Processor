@@ -6,6 +6,9 @@
 PKNNIV001::ConnectedComponent::ConnectedComponent(int no, int ID, std::vector<std::pair<int,int>> pix):
     nopix{no}, id{ID}, pixels{pix}{}
 
+PKNNIV001::ConnectedComponent::ConnectedComponent(int ID):
+    nopix{0}, id{ID}{}
+
 //copy constructor
 PKNNIV001::ConnectedComponent::ConnectedComponent(const ConnectedComponent &rhs):
     ConnectedComponent{rhs.nopix,rhs.nopix,rhs.pixels}{}

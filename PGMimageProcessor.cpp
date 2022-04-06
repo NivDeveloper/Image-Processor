@@ -2,6 +2,7 @@
 #include <memory>
 #include <fstream>
 #include <sstream>
+#include <iostream>
 #include <queue>
 
 //default constructor
@@ -80,7 +81,7 @@ must be returned.*/
 int PKNNIV001::PGMimageProcessor::extractComponents(unsigned char threshold, int minValidSize){
     //image now in memory, now have to extract components
     
-    std::queue<std::pair<int,int>> q;   //queue storing all pixels in a component
+    
 
     int ID{0};  //iteratng count of number of components also the current index of component in component vector
 
@@ -89,6 +90,9 @@ int PKNNIV001::PGMimageProcessor::extractComponents(unsigned char threshold, int
         for(size_t j = 0; j<width;++i){
             //if above threshold, add to queue
             if(image[i][j] >=threshold){
+
+                //queue storing all pixels in a component
+                std::queue<std::pair<int,int>> q;
                 //create new component
                 components.push_back(ConnectedComponent(ID));
                 //add current pixel to it
@@ -160,24 +164,83 @@ int PKNNIV001::PGMimageProcessor::filterComponentsBySize(int minSize, int maxSiz
             i = components.erase(i);
         }
     }
-
     //return new size of vector
     return components.size();
-
 }
+
 
 /* create a new PGM file which contains all current components
 (255=component pixel, 0 otherwise) and write this to outFileName as a
 valid PGM. the return value indicates success of operation*/
-bool PKNNIV001::PGMimageProcessor::writeComponents(const std::string & outFileName){}
+bool PKNNIV001::PGMimageProcessor::writeComponents(const std::string & outFileName){
+
+    //output file
+    std::ofstream ofile{outFileName, std::ios::binary};
+    //write header info to file
+    ofile << "P5" << std::endl;
+    ofile << width << " " << height << std::endl;
+    ofile << "255" << std::endl;
+
+    //make entire image in memory black
+    for(size_t i=0; i<height; ++i){
+        for(size_t j=0; j<width; ++j){
+            image[i][j] = '\0';
+        }
+    }
+
+    //loop over all components
+    for(ConnectedComponent c:components){
+        //overwrite image unique vector for this array
+
+        //loop over vector of included components in c
+        for(std::pair<int,int> p :c.getPixels()){
+            //turn all pixels in p into 255
+            image[p.first][p.second] = 255;
+        }
+    }
+    
+    //then write contents of unique pointer to outfile
+    for(size_t i=0; i<height; ++i){
+        for(size_t j=0; j<width; ++j){
+            ofile.write(&image[i][j],1);
+        }
+    }
+    //close file
+    ofile.close();
+
+}
 // return number of components
-int PKNNIV001::PGMimageProcessor::getComponentCount(void) const{}
+int PKNNIV001::PGMimageProcessor::getComponentCount(void) const{
+    return int{components.size()};
+}
 
 // return number of pixels in largest component
-int PKNNIV001::PGMimageProcessor::getLargestSize(void) const{}
+int PKNNIV001::PGMimageProcessor::getLargestSize(void) const{
+    int largest{0};
+
+    for(ConnectedComponent c:components){
+        if(c.getNoPixels()>largest){
+            largest = c.getNoPixels();
+        }
+    }
+
+    return largest;
+}
 // return number of pixels in smallest component
-int PKNNIV001::PGMimageProcessor::getSmallestSize(void) const{}
+int PKNNIV001::PGMimageProcessor::getSmallestSize(void) const{
+    int smallest{components[0].getNoPixels()};
+
+    for(ConnectedComponent c: components){
+        if(c.getNoPixels()<smallest){
+            smallest = c.getNoPixels();
+        }
+    }
+    return smallest;
+}
+
 /* print the data for a component to std::cout
 see ConnectedComponent class;
 print out to std::cout: component ID, number of pixels*/
-void PKNNIV001::PGMimageProcessor::printComponentData(const PKNNIV001::ConnectedComponent & theComponent) const{}
+void PKNNIV001::PGMimageProcessor::printComponentData(const PKNNIV001::ConnectedComponent & theComponent) const{
+    std::cout << "Component ID: " << theComponent.getID() << "Number of pixels: " << theComponent.getNoPixels() << std::endl;
+}
