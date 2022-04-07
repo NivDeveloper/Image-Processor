@@ -170,7 +170,7 @@ int PKNNIV001::PGMimageProcessor::extractComponents(unsigned char threshold, int
 
             }
         }
-    }std::cout << "hello" << std::endl;
+    }
     //return number of components
     return components.size();
 }
