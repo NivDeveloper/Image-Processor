@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iostream>
 #include <queue>
+#include <cstring>
 
 PKNNIV001::PGMimageProcessor::PGMimageProcessor(std::string n, std::vector<ConnectedComponent> comp, int h, int w):
     name{n}, components{comp}, height{h}, width{w}{}
@@ -22,11 +23,13 @@ PKNNIV001::PGMimageProcessor::PGMimageProcessor(std::string n):
         while(true){
             std::getline(file,line);
             header << line << std::endl;
+            //std::cout << line << std::endl;
             if(line == "255"){
                 break;
             }
             size= line;
         }
+        //image{std::malloc(height)};
         std::stringstream ssize{size};
         ssize >> size;
         width=std::stoi(size);
@@ -40,11 +43,24 @@ PKNNIV001::PGMimageProcessor::PGMimageProcessor(std::string n):
         //std::streampos h{length};
         //std::streampos si = file.tellg()-h;
         file.seekg(int(header.str().length())+1, std::ios::beg);
-
         //read file in line by line into unique pointer array
-        for(size_t i = 0; i<height;++i){
-            file.getline(image[i].get(),linewidth);
+        //create 1d smart pointer to add each line 
+        std::unique_ptr<char []> li;
+        image = std::make_unique<std::unique_ptr<char[]>[]>(height);
+        for(size_t i = 0; i<height-1;++i){
+            li = std::make_unique<char[]>(width);
+
+            //for(size_t j = 0; j<width;++j){
+                file.read(li.get(),width);
+                //std::cout << li.get()<< std::endl;
+            //}
+            image[i]=std::move(li);
+            
+            
+            //std::cout << *image[i].get() << std::endl;       
+        //add line to image 
         }
+        
         
         //close file
         file.close();
@@ -82,7 +98,7 @@ PKNNIV001::PGMimageProcessor::~PGMimageProcessor(){
 }
 
 
-/* process the input image to extract all the connected components,
+/* process the input image to extract all the conn                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ected components,
 based on the supplied threshold (0...255) and excluding any components
 of less than the minValidSize. The final number of components that
 you store in your container (after discarding undersized one)
@@ -93,11 +109,12 @@ int PKNNIV001::PGMimageProcessor::extractComponents(unsigned char threshold, int
     int ID{0};  //iteratng count of number of components also the current index of component in component vector
 
     //loop over each pixel in input image
+    
     for(size_t i=0; i<height;++i){
         for(size_t j = 0; j<width;++i){
             //if above threshold, add to queue
             if(image[i][j] >=threshold){
-
+                
                 //queue storing all pixels in a component
                 std::queue<std::pair<int,int>> q;
                 //create new component
@@ -122,7 +139,7 @@ int PKNNIV001::PGMimageProcessor::extractComponents(unsigned char threshold, int
                 if(0<=j-1<=width){  //west pixel
                     q.push(std::make_pair(i,j-1));
                 }
-                
+
                 //while queue not empty - continue breadth first search
                 while(!q.empty()){
                     //check if front of queue is greater than threshold
@@ -149,10 +166,11 @@ int PKNNIV001::PGMimageProcessor::extractComponents(unsigned char threshold, int
                     }
                     //pop front off of queue
                     q.pop();
-                }
+                }                
+
             }
         }
-    }
+    }std::cout << "hello" << std::endl;
     //return number of components
     return components.size();
 }
@@ -162,6 +180,10 @@ components and filter out (remove) all the components which do not
 obey the size criteria pass as arguments. The number remaining
 after this operation should be returned.*/
 int PKNNIV001::PGMimageProcessor::filterComponentsBySize(int minSize, int maxSize){
+
+    if(maxSize == 0){
+        maxSize = width*height;
+    }
 
     //iterator to iterate over vector of ConnectedComponents
     std::vector<ConnectedComponent>::iterator i;
@@ -183,6 +205,10 @@ bool PKNNIV001::PGMimageProcessor::writeComponents(const std::string & outFileNa
 
     //output file
     std::ofstream ofile{outFileName, std::ios::binary};
+    //if file didnt open, return false
+    if(!ofile.is_open()){
+        return false;
+    }
     //write header info to file
     ofile << "P5" << std::endl;
     ofile << width << " " << height << std::endl;
@@ -194,7 +220,6 @@ bool PKNNIV001::PGMimageProcessor::writeComponents(const std::string & outFileNa
             image[i][j] = '\0';
         }
     }
-
     //loop over all components
     for(ConnectedComponent c:components){
         //overwrite image unique vector for this array
@@ -214,6 +239,7 @@ bool PKNNIV001::PGMimageProcessor::writeComponents(const std::string & outFileNa
     }
     //close file
     ofile.close();
+    return true;
 
 }
 // return number of components

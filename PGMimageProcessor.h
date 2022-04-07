@@ -15,7 +15,8 @@ namespace PKNNIV001{
         private:
             std::string name;
             //pointer array holing input image in memory
-            static std::unique_ptr<std::unique_ptr<char []>[]> image;
+            std::unique_ptr<std::unique_ptr<char []>[]> image;
+            //char ** image;
             //vector to store all components
             std::vector<ConnectedComponent> components;
             int height,width; //dimensions of input image
